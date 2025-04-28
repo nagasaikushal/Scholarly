@@ -1,0 +1,67 @@
+System Plan
+
+1. 📚 Modules
+- Admin
+- Guide
+- Student
+
+2. 🎯 Features Per Role
+
+👑 Admin
+- Approve / Reject Guides
+- Manage Students
+- Manage Research Projects (View All)
+- Assign/unassign guides manually if needed
+- Manage platform settings (optional)
+
+🧑‍🏫 Guide
+- View Student Project Proposals
+- Select up to 5 Projects to guide
+- Accept / Reject student guidance requests
+- View assigned project details
+- Communicate with assigned students (chat or comments)
+
+🎓 Student
+- Register/Login
+- Create Project Proposal (Title, Abstract, Field)
+- Request Guide (filter by research field)
+- Upload Research Materials
+- Accept guidance if guide selects them
+- View other students' approved projects/papers (read-only)
+
+3. 🔥 Key Special Functionalities
+
+Feature: Guide limit
+- Guides can be assigned to only 5 projects maximum.
+
+Feature: Dual Selection
+- Guides can browse and select students’ projects.
+- Students can send requests to Guides.
+
+Feature: Profile building
+- develop complete profile with all details and resume/cv
+
+Feature: Team Formation, communication and guide communication
+- team formation based on email request
+- a simple chat app to communicate with team & Guide
+
+Feature: Project Visibility
+- All students can't see each others' projects (maybe only after Admin approval).
+
+4. 🛠️ Suggested Tech Stack
+
+Frontend: React.js + TailwindCSS  
+Backend: Node.js + Express.js  
+Database: MongoDB Atlas  
+Extra Tools: JWT Auth, Multer (for file uploads)
+
+
+5. ✨ Workflow Example
+
+- Student submits a project proposal.
+- Admin approves project.
+- Guide sees list of student projects and selects one → assigned if guide has less than 5 projects.
+- OR Student sends a guide request → guide accepts → assigned.
+- Student and Guide collaborate on the project.
+- Students can browse and view approved projects of other students.
+
