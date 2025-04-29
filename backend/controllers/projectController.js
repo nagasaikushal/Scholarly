@@ -4,7 +4,7 @@ const User = require("../models/Users");
 // Submit a new project proposal
 const submitProjectProposal = async (req, res) => {
   const { title, abstract, field } = req.body;
-  const studentId = req.user.id; // Student ID from the JWT token
+  const studentId = req.user.id; // Student ID from JWT token
 
   try {
     const newProject = new Project({
@@ -12,6 +12,10 @@ const submitProjectProposal = async (req, res) => {
       abstract,
       field,
       student: studentId,
+      guide: null, // No guide initially
+      guideStatus: 'open for guide',
+      teamFormed: false,
+      teamStatus: 'open for team',
     });
 
     await newProject.save();
@@ -54,14 +58,19 @@ const assignGuide = async (req, res) => {
       return res.status(404).json({ msg: "Project not found" });
     }
 
-    // Check if the guide has less than 5 projects
     const guide = await User.findById(guideId);
+    if (!guide) {
+      return res.status(404).json({ msg: "Guide not found" });
+    }
+
+    // Check if guide already has 5 projects
     const guideProjects = await Project.find({ guide: guideId });
     if (guideProjects.length >= 5) {
       return res.status(400).json({ msg: "Guide has reached the maximum number of projects" });
     }
 
     project.guide = guideId;
+    project.guideStatus = 'assigned'; // Update guide status
     await project.save();
 
     res.json({ msg: "Guide assigned successfully", project });
@@ -73,7 +82,7 @@ const assignGuide = async (req, res) => {
 
 // Accept or reject a student's project
 const acceptRejectProject = async (req, res) => {
-  const { projectId, status } = req.body; // status can be "approved" or "rejected"
+  const { projectId, status } = req.body; // status: "approved" or "rejected"
 
   try {
     const project = await Project.findById(projectId);
@@ -94,12 +103,16 @@ const acceptRejectProject = async (req, res) => {
 // Upload project materials (research papers, etc.)
 const uploadProjectMaterials = async (req, res) => {
   const projectId = req.body.projectId;
-  const materials = req.files.map(file => file.path); // Multer will handle the file upload
+  const materials = req.files.map(file => file.path); // Multer handles uploads
 
   try {
     const project = await Project.findById(projectId);
     if (!project) {
       return res.status(404).json({ msg: "Project not found" });
+    }
+
+    if (!project.materials) {
+      project.materials = []; // Initialize if undefined
     }
 
     project.materials.push(...materials);
